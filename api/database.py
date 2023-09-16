@@ -13,7 +13,6 @@ class DatabaseConnection:
                 port = cls._config['DATABASE_PORT'],
                 password = cls._config['DATABASE_PASSWORD']
             )
-        
         return cls._connection
 
     @classmethod
@@ -25,7 +24,6 @@ class DatabaseConnection:
         cursor = cls.get_connection().cursor()
         cursor.execute(query, params)
         cls._connection.commit()
-        
         return cursor
     
     @classmethod
@@ -38,7 +36,6 @@ class DatabaseConnection:
     def fetch_one(cls, query, database_name=None, params=None):
         cursor = cls.get_connection().cursor()
         cursor.execute(query, params)
-        
         return cursor.fetchone()
     
     @classmethod
