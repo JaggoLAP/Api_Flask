@@ -30,6 +30,7 @@ class DatabaseConnection:
     def fetch_all(cls, query, database_name=None, params=None):
         cursor = cls.get_connection().cursor()
         cursor.execute(query, params)
+        print(f'4 query en db: {query}')
         return cursor.fetchall()
     
     @classmethod
