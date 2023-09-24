@@ -39,10 +39,7 @@ class Canal:
     def get_all(cls, servidor_id):
         query = '''SELECT * FROM devpro.canales WHERE servidor_id = %s'''
         params = servidor_id,
-        print(f"2 query: {query}")
-        print(f"3 params: {params}")
         results = DatabaseConnection.fetch_all(query, params=params)
-        print(f"5 results: {results}")
         canales = []
         if results is not None:
             for result in results:
@@ -53,16 +50,20 @@ class Canal:
         
     @classmethod
     def create(cls, canal):
-        query = '''INSERT INTO devpro.canales /
-                (nombre_canal, servidor_id, id_creador_canal) /
-                VALUES (%s, %s, %s)'''
-
-        params = canal.nombre_canal, canal.servidor_id, canal.id_creador_canal
+        query = '''INSERT INTO devpro.canales (nombre_canal, servidor_id, id_creador_canal) VALUES (%s, %s, %s)'''
+        params = canal.nombre_canal, canal.servidor_id, canal.id_creador_canal,
         DatabaseConnection.execute_query(query, params=params)
 
     @classmethod
     def update(cls, canal):
         query = '''UPDATE devpro.canales SET nombre_canal = %s WHERE id_canal = %s'''
+        params = canal.nombre_canal, canal.id_canal,
+        DatabaseConnection.execute_query(query, params=params)
 
-        params = canal.nombre_canal, canal.id_canal
+    @classmethod
+    def delete(cls, canal):
+        query = '''DELETE FROM devpro.canales WHERE id_canal = %s'''
+        print(f'query model: {query}')
+        params = canal.id_canal,
+        print(f'params model: {params}')
         DatabaseConnection.execute_query(query, params=params)

@@ -32,13 +32,14 @@ class User:
         query = """SELECT id_usuario FROM devpro.usuarios \
           WHERE nombre_usuario = %s and contrasena = %s;"""
         params = user.nombre_usuario, user.contrasena
+        print(f'params: {params}')
         result = DatabaseConnection.fetch_one(query, params=params)
         if result is not None:
             return True
         return False
     
     @classmethod
-    def get(cls, user):
+    def get_auth(cls, user):
         query = """SELECT * FROM devpro.usuarios WHERE nombre_usuario = %s"""
         params = user.nombre_usuario,
         result = DatabaseConnection.fetch_one(query, params=params)

@@ -13,8 +13,7 @@ class CanalController:
             return result.serialize(), 200
 
     @classmethod
-    def get_all(cls):
-        servidor_id = 2 #session.get('servidor_id')
+    def get_all(cls, servidor_id):
         print(f'1 servidor_id: {servidor_id}')
         results = Canal.get_all(servidor_id)
         print(f"6 results: {results}")
@@ -37,13 +36,16 @@ class CanalController:
         data = request.json
         canal = Canal(**data)
         Canal.create(canal)
+        print(f'params controller resultado: {canal}')
         return {'message': 'Canal created successfully'}, 201
 
     @classmethod
     def update(cls, id_canal):
         data = request.json
-        data['canal_id'] = id_canal
+        data['id_canal'] = id_canal
         canal = Canal(**data)
+        print(f'id_canal controller: {data["id_canal"]}')
+        print(f'nombre_canal controller: {data["nombre_canal"]}')
         Canal.update(canal)
         return {'message': 'Canal updated successfully'}, 200
 
