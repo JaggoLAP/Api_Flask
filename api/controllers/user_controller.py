@@ -23,6 +23,7 @@ class UserController:
     def create(cls):
         data = request.json
         user = User(**data)
+        print(f'user: {user}')
         user.create(user)
         return {'message': 'user created successfully'}, 201
     

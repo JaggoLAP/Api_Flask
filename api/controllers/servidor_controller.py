@@ -26,6 +26,21 @@ class ServidorController:
             for result in results:
                 servidores.append(result.serialize())
             return servidores, 200
+        
+    @classmethod
+    def get_all_by_user(cls):
+        nombre_usuario = session.get('nombre_usuario')
+        if nombre_usuario is None:
+            return {"message": "Usuario no encontrado"}, 404
+        else:
+            usuario_id = session.get('id_usuario')
+            print(f'nombre_usuario: {nombre_usuario}')
+            print(f'usuario_id: {usuario_id}')
+            results = Servidor.get_all_by_user(usuario_id)
+            servidores = []
+            for result in results:
+                servidores.append(result.serialize())
+            return servidores, 200
     
     @classmethod
     def get_by_name(cls, string_param):

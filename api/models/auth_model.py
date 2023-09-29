@@ -32,9 +32,10 @@ class User:
           WHERE nombre_usuario = %s and contrasena = %s;"""
         params = user.nombre_usuario, user.contrasena
         result = DatabaseConnection.fetch_one(query, params=params)
+        
         if result is not None:
-            return True
-        return False
+            return result
+        return None
     
     @classmethod
     def get_auth(cls, user):

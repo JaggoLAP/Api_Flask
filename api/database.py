@@ -22,8 +22,11 @@ class DatabaseConnection:
     @classmethod
     def execute_query(cls, query, database_name=None, params=None):
         cursor = cls.get_connection().cursor()
+        print(f'query db: {query}')
+        print(f'params db: {params}')
         cursor.execute(query, params)
         cls._connection.commit()
+        print(f'paso la db')
         return cursor
     
     @classmethod

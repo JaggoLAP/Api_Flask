@@ -9,6 +9,7 @@ class Servidor:
         self.fecha_creacion_servidor = kwargs.get('fecha_creacion_servidor')
         self.imagen_servidor = kwargs.get('imagen_servidor')
         self.id_creador_servidor = kwargs.get('id_creador_servidor')
+        self.usuario_id = kwargs.get('usuario_id')
         
     def serialize(self):
         return {
@@ -17,7 +18,8 @@ class Servidor:
             "descripcion": self.descripcion,
             "fecha_creacion_servidor": self.fecha_creacion_servidor,
             "imagen_servidor": self.imagen_servidor,
-            "id_creador_servidor": self.id_creador_servidor
+            "id_creador_servidor": self.id_creador_servidor,
+            "usuario_id": self.usuario_id
         }
     
     @classmethod
@@ -51,7 +53,30 @@ class Servidor:
                     nombre_servidor=result[1],
                     descripcion=result[2],
                     fecha_creacion_servidor=result[3],
-                    id_creador_servidor=result[4]
+                    imagen_servidor=result[4],
+                    id_creador_servidor=result[5]
+                ))
+            return servidores
+        else:
+            return None
+        
+    @classmethod
+    def get_all_by_user(cls, usuario_id):
+        query = '''SELECT s.*, ms.usuario_id FROM devpro.servidores s INNER JOIN devpro.miembro_servidor ms ON s.id_servidor = ms.servidor_id WHERE ms.usuario_id = %s;'''
+        params = usuario_id,
+        results = DatabaseConnection.fetch_all(query, params=params)
+        servidores = []
+
+        if results is not None:
+            for result in results:
+                servidores.append(cls(
+                    id_servidor=result[0],
+                    nombre_servidor=result[1],
+                    descripcion=result[2],
+                    fecha_creacion_servidor=result[3],
+                    imagen_servidor=result[4],
+                    id_creador_servidor=result[5],
+                    usuario_id=result[6]
                 ))
             return servidores
         else:
@@ -70,7 +95,8 @@ class Servidor:
                     nombre_servidor=result[1],
                     descripcion=result[2],
                     fecha_creacion_servidor=result[3],
-                    id_creador_servidor=result[4]
+                    imagen_servidor=result[4],
+                    id_creador_servidor=result[5]
                 ))
             return servidores
         else:

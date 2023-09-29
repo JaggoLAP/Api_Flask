@@ -1,5 +1,5 @@
 from ..models.mensaje_model import Mensaje
-from flask import request
+from flask import request, session
 from flask import json
 
 
@@ -7,13 +7,18 @@ class MensajeController:
 
     @classmethod
     def create_mensaje(cls):
-        """Create a new mensaje"""
-        data = request.json
-        print(f"data: {data}")
-        mensaje = Mensaje(**data)
-        print(f"mensaje: {mensaje}")
-        Mensaje.create_mensaje(mensaje)
-        return {'message': 'message created successfully'}, 201
+        nombre_usuario = session.get('nombre_usuario')
+        if nombre_usuario is None:
+            return {"message": "Usuario no encontrado"}, 404
+        else:
+            usuario_id = session.get('id_usuario')
+            data = request.json
+            data['usuario_id'] = usuario_id
+            print(f"data: {data}")
+            mensaje = Mensaje(**data)
+            print(f"mensaje: {mensaje}")
+            Mensaje.create_mensaje(mensaje)
+            return {'message': 'message created successfully'}, 201
 
     @classmethod
     def obtener_mensajes_por_canal(cls,canal_id):
@@ -27,7 +32,8 @@ class MensajeController:
                 contenido=result[1],
                 fecha_envio=result[2],
                 usuario_id=result[3],
-                canal_id=result[4]
+                canal_id=result[4],
+                nombre_usuario=result[5]
             )
             print(f"8 canal: {mensaje}")
             mensajes.append(mensaje.serialize())
@@ -35,18 +41,26 @@ class MensajeController:
         return mensajes, 200
 
     @classmethod
-    def borrar_mensaje(cls,id_mensaje,usuario_id):
-        Mensaje.delete(id_mensaje, usuario_id)
-        return {'message': 'Mensaje deleted successfully'}, 204
+    def borrar_mensaje(cls,id_mensaje):
+        nombre_usuario = session.get('nombre_usuario')
+        if nombre_usuario is None:
+            return {"message": "Usuario no encontrado"}, 404
+        else:
+            usuario_id = session.get('id_usuario')
+            print(f'usuario_id: {usuario_id}')
+            Mensaje.delete(id_mensaje, usuario_id)
+            return {'message': 'Mensaje deleted successfully'}, 204
 
     
     @classmethod
     def modificar_mensaje(cls,id_mensaje):
-        data = request.json
-        data['id_mensaje'] = id_mensaje
-        print(f"id_mensaje: {data['id_mensaje']}")
-        print(f"contenido: {data['contenido']}")
-        print(f"usuario_id: {data['usuario_id']}")
-        mensaje = Mensaje(**data)
-        Mensaje.update(mensaje)
-        return {'message': 'Mensaje updated successfully'}, 200
+        nombre_usuario = session.get('nombre_usuario')
+        if nombre_usuario is None:
+            return {"message": "Usuario no encontrado"}, 404
+        else:
+            usuario_id = session.get('id_usuario')
+            data = request.json
+            data['id_mensaje'] = id_mensaje
+            mensaje = Mensaje(**data)
+            Mensaje.update(mensaje,usuario_id)
+            return {'message': 'Mensaje updated successfully'}, 200
